@@ -1,0 +1,46 @@
+{
+  "name": "two-valley",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "dotenv -e .env.test -- vitest run",
+    "test:unit": "dotenv -e .env.test -- vitest run tests/unit",
+    "test:integration": "dotenv -e .env.test -- vitest run tests/integration",
+    "test:e2e": "dotenv -e .env.test -- npx playwright test"
+  },
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.0",
+    "cloudinary": "^2.11.0",
+    "motion": "^13.4.0",
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.6.5",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@prisma/client": "^6.4.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "prisma": "^6.4.1",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.15",
+    "typescript": "^5",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.1"
+  }
+}

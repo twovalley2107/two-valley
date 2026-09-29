@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  /* Brand Primary Colors */
+  --color-forest-green: #1E3A2B;
+  --color-olive-green: #4A5D4E;
+  --color-ivory-cream: #FDFBF7;
+  --color-muted-gold: #D4AF37;
+  --color-warm-beige: #F5EFE6;
+  --color-charcoal-dark: #121915;
+  --color-gold-glow: #E5C158;
+
+  /* Surface & Glassmorphism Tokens */
+  --glass-background: rgba(253, 251, 247, 0.75);
+  --glass-border: rgba(212, 175, 55, 0.2);
+  --glass-blur: blur(12px);
+
+  /* Shadows & Elevations */
+  --shadow-subtle: 0 4px 20px -2px rgba(30, 58, 43, 0.05);
+  --shadow-elevated: 0 12px 36px -4px rgba(30, 58, 43, 0.12);
+  --shadow-gold-glow: 0 0 24px rgba(212, 175, 55, 0.25);
+
+  --background: var(--color-ivory-cream);
+  --foreground: var(--color-charcoal-dark);
+}
+
+@theme inline {
+  --color-brand-forest: var(--color-forest-green);
+  --color-brand-olive: var(--color-olive-green);
+  --color-brand-ivory: var(--color-ivory-cream);
+  --color-brand-gold: var(--color-muted-gold);
+  --color-brand-beige: var(--color-warm-beige);
+  --color-brand-charcoal: var(--color-charcoal-dark);
+  --color-brand-glow: var(--color-gold-glow);
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-cinzel: var(--font-cinzel), serif;
+}
+
+/* Global Reset & Typography Rules */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Headings default to Playfair Display editorial serif */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+}
+
+/* Luxury accent utility class for Cinzel */
+.font-cinzel {
+  font-family: var(--font-cinzel);
+}
+
+/* Universal high-contrast focus-visible indicator for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--color-muted-gold);
+  outline-offset: 2px;
+}
+
+/* Horizontal Brand Ticker Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+

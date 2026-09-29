@@ -1,0 +1,197 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+  FAILED
+}
+
+model Profile {
+  id        String   @id // Maps directly to Supabase Auth User UUID (auth.users.id)
+  email     String   @unique
+  phone     String?  @unique
+  name      String?
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders        Order[]
+  wishlistItems WishlistItem[]
+  reviews       Review[]
+  eventLogs     EventLog[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  image       String?
+  products    Product[]
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String   @unique
+  sku              String   @unique
+  description      String
+  price            Decimal  @db.Decimal(10, 2)
+  salePrice        Decimal? @db.Decimal(10, 2)
+  stockQuantity    Int      @default(0)
+  isFeatured       Boolean  @default(false)
+  categoryId       String
+  category         Category @relation(fields: [categoryId], references: [id])
+  
+  // Sensory & Recommendation Metadata
+  fragranceFamily  String?  // Woody, Floral, Fresh, Spice
+  teaType          String?  // CTC Chai Patti, Loose Leaf, Green, Infusion
+  origin           String?  // Assam, Darjeeling, etc.
+  caffeineLevel    String?  // High, Medium, Low, Free
+  steepingGuide    String?  // Summary text or JSON guide
+  mood             String?  // Meditative, Energetic, Romantic, Refreshing
+  occasion         String?  // Evening Gala, Morning Ritual, Daily Wear, Gifting
+  useCase          String?  // Workday Focus, Post-Workout Relaxation
+  pairingTags      String?  // Comma-separated or JSON list of cross-pairing tags
+  tags             String?  // Comma-separated taxonomy tags
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  variants         ProductVariant[]
+  images           ProductImage[]
+  sensoryAttributes SensoryAttribute[]
+  wishlistItems    WishlistItem[]
+  orderItems       OrderItem[]
+  reviews          Review[]
+}
+
+model ProductVariant {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  volumeWeight  String   // e.g. "50ml", "100ml", "100g", "250g"
+  priceOverride Decimal? @db.Decimal(10, 2)
+  stockQuantity Int      @default(0)
+  sku           String   @unique
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String   // Supabase Storage public URL
+  altText   String?
+  isPrimary Boolean  @default(false)
+  sortOrder Int      @default(0)
+}
+
+model SensoryAttribute {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attributeType String   // TOP_NOTE, HEART_NOTE, BASE_NOTE, FLAVOUR_NOTE
+  name          String
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  profileId String?
+  sessionId String?
+  productId String
+  profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  // Uniqueness Strategies:
+  // Authenticated users: One entry per product per profile
+  // Guest users: One entry per product per session
+  @@unique([profileId, productId])
+  @@unique([sessionId, productId])
+  @@index([profileId])
+  @@index([sessionId])
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  profileId       String?
+  sessionId       String?
+  profile         Profile?      @relation(fields: [profileId], references: [id])
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(UNPAID)
+  paymentProvider String?
+  paymentTxnId    String?
+  subtotal        Decimal       @db.Decimal(10, 2)
+  tax             Decimal       @db.Decimal(10, 2)
+  shippingFee     Decimal       @db.Decimal(10, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  shippingAddress Json          // Structured JSON storing full recipient details
+  contactEmail    String
+  contactPhone    String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  variantName String?  // Stores volume/weight snapshot
+  quantity    Int
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  totalPrice  Decimal  @db.Decimal(10, 2)
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  profileId  String
+  profile    Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  rating     Int      // 1 to 5
+  title      String?
+  comment    String
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model EventLog {
+  id        String   @id @default(cuid())
+  sessionId String
+  profileId String?
+  profile   Profile? @relation(fields: [profileId], references: [id])
+  eventType String   // product_view, search_query, wishlist_add, cart_add, purchase_completed
+  metadata  String?  // JSON string storing contextual details
+  createdAt DateTime @default(now())
+
+  @@index([sessionId])
+  @@index([profileId])
+  @@index([eventType])
+}
