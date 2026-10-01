@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import { telemetryPayloadSchema } from "@/lib/validation/telemetry";
 import { PaymentStatus } from "@prisma/client";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     // 1. Read Raw Body

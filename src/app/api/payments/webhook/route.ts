@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { mockPaymentAdapter } from "@/lib/payments/mockAdapter";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const rawBody = await request.text();
