@@ -198,26 +198,35 @@ function sortCandidatesDeterministically<T extends { similarityScore?: number; i
  * 5. Returns safe RecommendationProductDTO array.
  */
 export async function getRecommendations(
-  productId: string,
+  target: string | ProductWithRelations,
   limit: number = 4
 ): Promise<ActionResult<RecommendationProductDTO[]>> {
-  if (!productId || typeof productId !== "string") {
+  if (!target) {
     return { success: false, error: "Invalid product identifier provided." };
   }
 
   const safeLimit = Math.min(Math.max(1, limit), 12);
 
   try {
-    // 1. Fetch Target Product
-    const targetProduct = await db.product.findUnique({
-      where: { id: productId.trim() },
-      include: {
-        category: true,
-        variants: { orderBy: { sku: "asc" } },
-        images: { orderBy: { sortOrder: "asc" } },
-        sensoryAttributes: true,
-      },
-    });
+    // 1. Resolve Target Product (Reuse provided object or query by ID)
+    let targetProduct: ProductWithRelations | null = null;
+    if (typeof target === "string") {
+      const trimmedId = target.trim();
+      if (!trimmedId) {
+        return { success: false, error: "Invalid product identifier provided." };
+      }
+      targetProduct = await db.product.findUnique({
+        where: { id: trimmedId },
+        include: {
+          category: true,
+          variants: { orderBy: { sku: "asc" } },
+          images: { orderBy: { sortOrder: "asc" } },
+          sensoryAttributes: true,
+        },
+      });
+    } else {
+      targetProduct = target;
+    }
 
     if (!targetProduct) {
       return { success: false, error: "Target product not found." };
@@ -297,7 +306,8 @@ export async function getRecommendations(
       data: safeDTOs,
     };
   } catch (error) {
-    console.error(`Error computing recommendations for product '${productId}':`, error);
+    const targetIdStr = typeof target === "string" ? target : target.id;
+    console.error(`Error computing recommendations for product '${targetIdStr}':`, error);
     return {
       success: false,
       error: "Failed to generate product recommendations.",
@@ -315,22 +325,31 @@ export async function getRecommendations(
  *    Does NOT return an unrelated fallback product.
  */
 export async function getCrossCategoryPairing(
-  productId: string
+  target: string | ProductWithRelations
 ): Promise<ActionResult<RecommendationProductDTO | null>> {
-  if (!productId || typeof productId !== "string") {
+  if (!target) {
     return { success: false, error: "Invalid product identifier provided." };
   }
 
   try {
-    const targetProduct = await db.product.findUnique({
-      where: { id: productId.trim() },
-      include: {
-        category: true,
-        variants: { orderBy: { sku: "asc" } },
-        images: { orderBy: { sortOrder: "asc" } },
-        sensoryAttributes: true,
-      },
-    });
+    let targetProduct: ProductWithRelations | null = null;
+    if (typeof target === "string") {
+      const trimmedId = target.trim();
+      if (!trimmedId) {
+        return { success: false, error: "Invalid product identifier provided." };
+      }
+      targetProduct = await db.product.findUnique({
+        where: { id: trimmedId },
+        include: {
+          category: true,
+          variants: { orderBy: { sku: "asc" } },
+          images: { orderBy: { sortOrder: "asc" } },
+          sensoryAttributes: true,
+        },
+      });
+    } else {
+      targetProduct = target;
+    }
 
     if (!targetProduct) {
       return { success: false, error: "Target product not found." };
@@ -436,7 +455,8 @@ export async function getCrossCategoryPairing(
       data: toRecommendationDTO(topPairing, topPairing.similarityScore),
     };
   } catch (error) {
-    console.error(`Error computing cross-category pairing for product '${productId}':`, error);
+    const targetIdStr = typeof target === "string" ? target : target.id;
+    console.error(`Error computing cross-category pairing for product '${targetIdStr}':`, error);
     return {
       success: false,
       error: "Failed to generate cross-category product pairing.",

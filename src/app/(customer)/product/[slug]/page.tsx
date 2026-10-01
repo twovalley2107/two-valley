@@ -74,15 +74,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const isPerfume = category?.slug === "artisanal-perfumes" || Boolean(product.fragranceFamily);
   const isTea = category?.slug === "single-estate-teas" || Boolean(product.teaType);
 
-  // Fetch server-side authenticated user for review form gating
+  // Concurrently fetch auth user, reviews, recommendations, and cross-category pairing in parallel
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [authRes, reviewResult, recResult, pairingResult] = await Promise.all([
+    supabase.auth.getUser().catch(() => ({ data: { user: null } })),
+    getApprovedReviews(product.id),
+    getRecommendations(product, 4),
+    getCrossCategoryPairing(product),
+  ]);
+
+  const user = authRes.data?.user || null;
   const isAuthenticated = Boolean(user);
 
-  // Fetch approved reviews summary (TV-12-001 / TV-12-002)
-  const reviewResult = await getApprovedReviews(product.id);
   const reviewSummary: ProductReviewSummary =
     reviewResult.success && reviewResult.data
       ? reviewResult.data
@@ -93,12 +96,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           ratingCounts: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
         };
 
-  // Fetch deterministic same-category recommendations (TV-13-001 / TV-13-003)
-  const recResult = await getRecommendations(product.id, 4);
   const recommendations = recResult.success && recResult.data ? recResult.data : [];
-
-  // Fetch cross-category product pairing (TV-13-004)
-  const pairingResult = await getCrossCategoryPairing(product.id);
   const pairingProduct = pairingResult.success && pairingResult.data ? pairingResult.data : null;
 
   // JSON-LD Product Schema for SEO

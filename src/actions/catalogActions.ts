@@ -1,5 +1,6 @@
 "use server";
 
+import { cache } from "react";
 import { db } from "@/lib/db";
 import { ProductWithRelations, ClientProduct, ProductFilterParams, ActionResult } from "@/types";
 import { serializeProductsForClient } from "@/lib/serializers/productSerializer";
@@ -66,36 +67,36 @@ export async function getAllProducts(options?: {
 }
 
 /**
- * Retrieves a single product by its unique slug.
+ * Retrieves a single product by its unique slug (Deduplicated via React cache).
  */
-export async function getProductBySlug(
-  slug: string
-): Promise<ActionResult<ProductWithRelations | null>> {
-  if (!slug || typeof slug !== "string") {
-    return {
-      success: false,
-      error: "Invalid product slug provided.",
-    };
-  }
+export const getProductBySlug = cache(
+  async (slug: string): Promise<ActionResult<ProductWithRelations | null>> => {
+    if (!slug || typeof slug !== "string") {
+      return {
+        success: false,
+        error: "Invalid product slug provided.",
+      };
+    }
 
-  try {
-    const product = await db.product.findUnique({
-      where: { slug: slug.trim() },
-      include: defaultProductIncludes,
-    });
+    try {
+      const product = await db.product.findUnique({
+        where: { slug: slug.trim() },
+        include: defaultProductIncludes,
+      });
 
-    return {
-      success: true,
-      data: product,
-    };
-  } catch (error) {
-    console.error(`Error fetching product slug '${slug}':`, error);
-    return {
-      success: false,
-      error: "Failed to fetch product details.",
-    };
+      return {
+        success: true,
+        data: product,
+      };
+    } catch (error) {
+      console.error(`Error fetching product slug '${slug}':`, error);
+      return {
+        success: false,
+        error: "Failed to fetch product details.",
+      };
+    }
   }
-}
+);
 
 /**
  * Retrieves all products belonging to a specific category slug.

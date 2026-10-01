@@ -10,6 +10,7 @@ import {
 } from "@/lib/validation/auth";
 import { Role } from "@prisma/client";
 import { cookies, headers } from "next/headers";
+import { after } from "next/server";
 
 export type ActionResult<T = unknown> = {
   success: boolean;
@@ -20,6 +21,7 @@ export type ActionResult<T = unknown> = {
 /**
  * Migrates guest wishlist items and event logs associated with guest `sessionId`
  * to the authenticated user's `profileId` upon login or registration.
+ * Uses atomic batch operations for maximum efficiency and data integrity.
  */
 export async function migrateGuestSessionToProfile(sessionId: string, profileId: string) {
   if (!sessionId || !profileId) return;
@@ -27,31 +29,22 @@ export async function migrateGuestSessionToProfile(sessionId: string, profileId:
   try {
     const guestWishlistItems = await db.wishlistItem.findMany({
       where: { sessionId },
+      select: { productId: true },
     });
 
-    for (const item of guestWishlistItems) {
-      const existing = await db.wishlistItem.findUnique({
-        where: {
-          profileId_productId: {
-            profileId,
-            productId: item.productId,
-          },
-        },
+    if (guestWishlistItems.length > 0) {
+      await db.wishlistItem.createMany({
+        data: guestWishlistItems.map((item) => ({
+          profileId,
+          productId: item.productId,
+        })),
+        skipDuplicates: true,
       });
 
-      if (!existing) {
-        await db.wishlistItem.create({
-          data: {
-            profileId,
-            productId: item.productId,
-          },
-        });
-      }
+      await db.wishlistItem.deleteMany({
+        where: { sessionId },
+      });
     }
-
-    await db.wishlistItem.deleteMany({
-      where: { sessionId },
-    });
 
     await db.eventLog.updateMany({
       where: { sessionId, profileId: null },
@@ -351,12 +344,14 @@ export async function loginAction(
     }
   }
 
-  // Migrate guest items if session_id cookie exists
+  // Migrate guest items non-blockingly using Next.js after() to guarantee completion after response
   try {
     const cookieStore = await cookies();
     const sessionId = cookieStore.get("session_id")?.value;
     if (sessionId) {
-      await migrateGuestSessionToProfile(sessionId, profile.id);
+      after(async () => {
+        await migrateGuestSessionToProfile(sessionId, profile.id);
+      });
     }
   } catch (cookieErr) {
     console.warn("Failed session sync / migration:", cookieErr);

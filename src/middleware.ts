@@ -6,47 +6,6 @@ export async function middleware(request: NextRequest) {
     request,
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // Refresh user session if token is expired
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const url = request.nextUrl.clone();
-  const pathname = url.pathname;
-
-  // Layer 1 Admin Route Protection (Request-level network boundary)
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
-    const hasAdminCookie = request.cookies.has("admin_session");
-    if (!user && !hasAdminCookie) {
-      url.pathname = "/admin/login";
-      url.searchParams.set("redirectTo", pathname);
-      return NextResponse.redirect(url);
-    }
-  }
-
   // Ensure guest session_id cookie exists for telemetry and guest wishlist scoping
   if (!request.cookies.has("session_id")) {
     const guestSessionId = crypto.randomUUID();
@@ -57,6 +16,46 @@ export async function middleware(request: NextRequest) {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     });
+  }
+
+  const pathname = request.nextUrl.pathname;
+
+  // Layer 1 Admin Route Protection (Request-level network boundary)
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value }) =>
+              request.cookies.set(name, value)
+            );
+            supabaseResponse = NextResponse.next({
+              request,
+            });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const hasAdminCookie = request.cookies.has("admin_session");
+    if (!user && !hasAdminCookie) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.searchParams.set("redirectTo", pathname);
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
