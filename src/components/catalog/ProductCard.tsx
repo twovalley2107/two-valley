@@ -42,7 +42,7 @@ export function ProductCard({ product }: ProductCardProps) {
               {categoryName}
             </span>
 
-            <Link href={`/product/${product.slug}`} className="focus:outline-none">
+            <Link href={`/product/${product.slug}`} prefetch={false} className="focus:outline-none">
               <h3 className="font-serif text-lg sm:text-xl font-semibold text-brand-forest group-hover:text-brand-gold transition-colors line-clamp-1">
                 {product.name}
               </h3>
@@ -89,6 +89,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
             <Link
               href={`/product/${product.slug}`}
+              prefetch={false}
               className="text-xs sm:text-sm uppercase tracking-widest font-semibold text-brand-forest hover:text-brand-gold transition-colors underline underline-offset-4 py-1"
             >
               Discover
