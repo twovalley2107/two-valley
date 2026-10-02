@@ -91,7 +91,7 @@ export function HeroSlider() {
   return (
     <section
       aria-label="Two Valley Hero Showcase"
-      className="relative w-full overflow-hidden bg-brand-charcoal text-brand-ivory min-h-[75vh] sm:min-h-[82vh] lg:min-h-[86vh] flex items-center justify-center border-b border-brand-gold/25"
+      className="relative w-full overflow-hidden bg-brand-charcoal text-brand-ivory min-h-[380px] sm:min-h-[82vh] lg:min-h-[86vh] flex items-center justify-center border-b border-brand-gold/25"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -118,39 +118,39 @@ export function HeroSlider() {
       ))}
 
       {/* Main Container Content Overlay */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 w-full">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-24 lg:py-32 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Brand Hero Text & CTAs */}
-          <div className="lg:col-span-8 space-y-6 sm:space-y-8 text-center lg:text-left">
+          <div className="lg:col-span-8 space-y-3 sm:space-y-8 text-center lg:text-left">
             {/* Badge */}
-            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-brand-gold/15 border border-brand-gold/35 backdrop-blur-md mx-auto lg:mx-0 w-fit">
-              <span className="w-2 h-2 rounded-full bg-brand-gold animate-pulse" />
-              <span className="font-sans text-xs font-semibold tracking-[0.2em] uppercase text-brand-gold">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-brand-gold/15 border border-brand-gold/35 backdrop-blur-md mx-auto lg:mx-0 w-fit">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-gold animate-pulse" />
+              <span className="font-sans text-[10px] sm:text-xs font-semibold tracking-[0.15em] sm:tracking-[0.2em] uppercase text-brand-gold">
                 {SLIDES[currentSlide].badge}
               </span>
             </div>
 
-            {/* Title (Typography: Playfair Display 56-72px desktop / 36-44px mobile) */}
-            <h1 className="font-serif text-3xl sm:text-5xl lg:text-7xl font-bold text-brand-ivory leading-[1.12] tracking-tight drop-shadow-md">
+            {/* Title */}
+            <h1 className="font-serif text-xl xs:text-2xl sm:text-5xl lg:text-7xl font-bold text-brand-ivory leading-[1.15] tracking-tight drop-shadow-md">
               {SLIDES[currentSlide].title}
             </h1>
 
             {/* Subtitle */}
-            <p className="font-sans text-base sm:text-lg lg:text-xl text-brand-ivory/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm font-normal">
+            <p className="font-sans text-xs sm:text-lg lg:text-xl text-brand-ivory/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm font-normal line-clamp-2 sm:line-clamp-none">
               {SLIDES[currentSlide].subtitle}
             </p>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4 font-sans">
+            <div className="flex flex-row items-center justify-center lg:justify-start gap-2.5 sm:gap-4 pt-2 sm:pt-4 font-sans">
               <Link
                 href={SLIDES[currentSlide].primaryCtaHref}
-                className="w-full sm:w-auto px-9 py-4.5 rounded-xl bg-brand-gold text-brand-charcoal hover:bg-brand-gold/90 font-semibold text-xs sm:text-sm uppercase tracking-widest shadow-xl hover:shadow-brand-gold/20 transition-all duration-200 text-center"
+                className="w-auto px-4 py-2 sm:px-9 sm:py-4.5 rounded-lg sm:rounded-xl bg-brand-gold text-brand-charcoal hover:bg-brand-gold/90 font-semibold text-[10px] sm:text-sm uppercase tracking-wider sm:tracking-widest shadow-xl transition-all duration-200 text-center"
               >
                 {SLIDES[currentSlide].primaryCtaText}
               </Link>
               <Link
                 href={SLIDES[currentSlide].secondaryCtaHref}
-                className="w-full sm:w-auto px-9 py-4.5 rounded-xl border-2 border-brand-ivory/80 text-brand-ivory hover:bg-brand-ivory hover:text-brand-charcoal font-semibold text-xs sm:text-sm uppercase tracking-widest transition-all duration-200 text-center backdrop-blur-sm"
+                className="w-auto px-4 py-2 sm:px-9 sm:py-4.5 rounded-lg sm:rounded-xl border border-brand-ivory/80 text-brand-ivory hover:bg-brand-ivory hover:text-brand-charcoal font-semibold text-[10px] sm:text-sm uppercase tracking-wider sm:tracking-widest transition-all duration-200 text-center backdrop-blur-sm"
               >
                 {SLIDES[currentSlide].secondaryCtaText}
               </Link>

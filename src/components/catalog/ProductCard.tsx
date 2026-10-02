@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductWithRelations, ClientProduct, RecommendationProductDTO } from "@/types";
@@ -7,11 +10,20 @@ interface ProductCardProps {
   product: ClientProduct | ProductWithRelations | RecommendationProductDTO;
 }
 
+const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800";
+
 export function ProductCard({ product }: ProductCardProps) {
-  const primaryImage =
-    product.images.find((img) => img.isPrimary)?.url ||
+  const initialImage =
+    product.images.find((img) => img.isPrimary && img.url)?.url ||
+    product.images.find((img) => img.url)?.url ||
     product.images[0]?.url ||
-    "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?q=80&w=800";
+    DEFAULT_FALLBACK_IMAGE;
+
+  const [imgSrc, setImgSrc] = useState(initialImage);
+
+  useEffect(() => {
+    setImgSrc(initialImage);
+  }, [initialImage]);
 
   const formattedPrice = `$${Number(product.price).toFixed(2)}`;
   const categoryName = product.category?.name || "Botanicals";
@@ -26,14 +38,15 @@ export function ProductCard({ product }: ProductCardProps) {
           className="relative aspect-square w-full rounded-lg sm:rounded-xl overflow-hidden bg-brand-ivory mb-1.5 sm:mb-4 block cursor-pointer group/img"
         >
           <Image
-            src={primaryImage}
+            src={imgSrc}
             alt={product.name}
             fill
             sizes="(max-width: 767px) 33vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover group-hover/img:scale-105 group-hover:scale-105 transition-transform duration-500 ease-out"
+            onError={() => setImgSrc(DEFAULT_FALLBACK_IMAGE)}
           />
           {product.isFeatured && (
-            <span className="absolute top-1 left-1 sm:top-3 sm:left-3 bg-brand-gold text-brand-charcoal font-sans text-[7px] xs:text-[8px] sm:text-xs font-bold uppercase tracking-wider px-1 sm:px-2.5 py-0.5 rounded-full shadow-sm">
+            <span className="absolute top-1 left-1 sm:top-3 sm:left-3 bg-brand-gold text-brand-charcoal font-sans text-[7px] xs:text-[8px] sm:text-xs font-bold uppercase tracking-wider px-1 sm:px-2.5 py-0.5 rounded-full shadow-sm z-10">
               Featured
             </span>
           )}

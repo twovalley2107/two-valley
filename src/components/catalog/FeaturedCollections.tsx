@@ -8,17 +8,39 @@ export async function FeaturedCollections() {
   const allProducts = result.success && result.data ? result.data : [];
 
   const getDisplayProducts = (categorySlug: string): ProductWithRelations[] => {
-    const categoryProducts = allProducts.filter((p) => p.category?.slug === categorySlug);
-    const featured = categoryProducts.filter((p) => p.isFeatured);
-    if (featured.length >= 4) {
-      return featured.slice(0, 4);
-    }
-    const nonFeatured = categoryProducts.filter((p) => !p.isFeatured);
-    return [...featured, ...nonFeatured].slice(0, 4);
+    const isTeaCategory = categorySlug === "single-estate-teas";
+    const categoryProducts = allProducts.filter((p) => {
+      const pCatSlug = p.category?.slug?.toLowerCase() || "";
+      const pCatName = p.category?.name?.toLowerCase() || "";
+      if (isTeaCategory) {
+        return (
+          pCatSlug === "single-estate-teas" ||
+          pCatSlug.includes("tea") ||
+          pCatSlug.includes("chay") ||
+          pCatSlug.includes("chai") ||
+          pCatName.includes("tea") ||
+          pCatName.includes("chai") ||
+          Boolean(p.teaType)
+        );
+      }
+      return (
+        pCatSlug === "artisanal-perfumes" ||
+        pCatSlug.includes("perfume") ||
+        pCatName.includes("perfume") ||
+        Boolean(p.fragranceFamily)
+      );
+    });
+
+    // Sort: Featured first, then newest created at the top
+    return [...categoryProducts].sort((a, b) => {
+      if (a.isFeatured && !b.isFeatured) return -1;
+      if (!a.isFeatured && b.isFeatured) return 1;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
   };
 
-  const featuredPerfumes = getDisplayProducts("artisanal-perfumes");
   const featuredTeas = getDisplayProducts("single-estate-teas");
+  const featuredPerfumes = getDisplayProducts("artisanal-perfumes");
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 bg-brand-ivory">
