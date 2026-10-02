@@ -91,11 +91,11 @@ export function HeroSlider() {
   return (
     <section
       aria-label="Two Valley Hero Showcase"
-      className="relative w-full overflow-hidden bg-brand-charcoal text-brand-ivory min-h-[380px] sm:min-h-[82vh] lg:min-h-[86vh] flex items-center justify-center border-b border-brand-gold/25"
+      className="relative w-full overflow-hidden bg-brand-ivory text-brand-forest min-h-[320px] sm:min-h-[440px] lg:min-h-[480px] max-h-[520px] flex items-center justify-center border-b border-brand-gold/25"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Slide Background Images with Overlay Dark Gradients */}
+      {/* Slide Background Images with Soft Light Overlay Gradients */}
       {SLIDES.map((slide, idx) => (
         <div
           key={slide.id}
@@ -109,34 +109,34 @@ export function HeroSlider() {
             fill
             priority={idx === 0}
             sizes="100vw"
-            className="object-cover object-center transform scale-105 transition-transform duration-[10000ms]"
+            className="object-cover object-center transform scale-105 transition-transform duration-[10000ms] opacity-35"
           />
-          {/* Multi-stage luxury gradient backdrop for high contrast readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-charcoal/90 via-brand-charcoal/75 to-brand-charcoal/40" />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal via-transparent to-brand-charcoal/50" />
+          {/* Light luxury gradient backdrop for crisp readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-ivory/95 via-brand-ivory/85 to-brand-ivory/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-ivory via-transparent to-brand-ivory/40" />
         </div>
       ))}
 
       {/* Main Container Content Overlay */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-24 lg:py-32 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 lg:py-16 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Brand Hero Text & CTAs */}
-          <div className="lg:col-span-8 space-y-3 sm:space-y-8 text-center lg:text-left">
+          <div className="lg:col-span-8 space-y-2.5 sm:space-y-6 text-center lg:text-left">
             {/* Badge */}
-            <div className="inline-flex items-center space-x-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-brand-gold/15 border border-brand-gold/35 backdrop-blur-md mx-auto lg:mx-0 w-fit">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-brand-beige border border-brand-gold/40 backdrop-blur-md mx-auto lg:mx-0 w-fit">
               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-gold animate-pulse" />
-              <span className="font-sans text-[10px] sm:text-xs font-semibold tracking-[0.15em] sm:tracking-[0.2em] uppercase text-brand-gold">
+              <span className="font-sans text-[10px] sm:text-xs font-semibold tracking-[0.15em] sm:tracking-[0.2em] uppercase text-brand-forest">
                 {SLIDES[currentSlide].badge}
               </span>
             </div>
 
             {/* Title */}
-            <h1 className="font-serif text-xl xs:text-2xl sm:text-5xl lg:text-7xl font-bold text-brand-ivory leading-[1.15] tracking-tight drop-shadow-md">
+            <h1 className="font-serif text-xl sm:text-4xl lg:text-5xl font-bold text-brand-forest leading-[1.15] tracking-tight drop-shadow-sm">
               {SLIDES[currentSlide].title}
             </h1>
 
             {/* Subtitle */}
-            <p className="font-sans text-xs sm:text-lg lg:text-xl text-brand-ivory/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm font-normal line-clamp-2 sm:line-clamp-none">
+            <p className="font-sans text-xs sm:text-base lg:text-lg text-brand-olive max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal line-clamp-2 sm:line-clamp-none">
               {SLIDES[currentSlide].subtitle}
             </p>
 
@@ -144,13 +144,13 @@ export function HeroSlider() {
             <div className="flex flex-row items-center justify-center lg:justify-start gap-2.5 sm:gap-4 pt-2 sm:pt-4 font-sans">
               <Link
                 href={SLIDES[currentSlide].primaryCtaHref}
-                className="w-auto px-4 py-2 sm:px-9 sm:py-4.5 rounded-lg sm:rounded-xl bg-brand-gold text-brand-charcoal hover:bg-brand-gold/90 font-semibold text-[10px] sm:text-sm uppercase tracking-wider sm:tracking-widest shadow-xl transition-all duration-200 text-center"
+                className="w-auto px-3.5 py-2 sm:px-7 sm:py-3.5 rounded-lg sm:rounded-xl bg-brand-forest text-brand-ivory hover:bg-brand-olive font-semibold text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest shadow-md transition-all duration-200 text-center"
               >
                 {SLIDES[currentSlide].primaryCtaText}
               </Link>
               <Link
                 href={SLIDES[currentSlide].secondaryCtaHref}
-                className="w-auto px-4 py-2 sm:px-9 sm:py-4.5 rounded-lg sm:rounded-xl border border-brand-ivory/80 text-brand-ivory hover:bg-brand-ivory hover:text-brand-charcoal font-semibold text-[10px] sm:text-sm uppercase tracking-wider sm:tracking-widest transition-all duration-200 text-center backdrop-blur-sm"
+                className="w-auto px-3.5 py-2 sm:px-7 sm:py-3.5 rounded-lg sm:rounded-xl border border-brand-forest text-brand-forest hover:bg-brand-beige font-semibold text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest transition-all duration-200 text-center backdrop-blur-sm"
               >
                 {SLIDES[currentSlide].secondaryCtaText}
               </Link>
@@ -159,13 +159,13 @@ export function HeroSlider() {
 
           {/* Right Column: Featured Product Card Showcase Overlay (Shown on Desktop) */}
           <div className="hidden lg:block lg:col-span-4 relative">
-            <div className="relative mx-auto max-w-sm aspect-square bg-brand-charcoal/80 rounded-3xl overflow-hidden border border-brand-gold/30 shadow-2xl backdrop-blur-lg">
+            <div className="relative mx-auto max-w-xs aspect-square bg-brand-ivory/90 rounded-2xl overflow-hidden border border-brand-gold/30 shadow-xl backdrop-blur-lg">
               <Image
                 src="https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=800"
                 alt="Two Valley Scent & Tea Experience"
                 fill
                 priority
-                sizes="400px"
+                sizes="320px"
                 className="object-cover transition-transform duration-700 hover:scale-105"
               />
             </div>
@@ -174,40 +174,40 @@ export function HeroSlider() {
       </div>
 
       {/* Slider Controls (Prev / Next Buttons & Indicators) */}
-      <div className="absolute bottom-6 left-0 right-0 z-30 flex items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="absolute bottom-4 left-0 right-0 z-30 flex items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Slide Indicators / Dots */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           {SLIDES.map((slide, idx) => (
             <button
               key={slide.id}
               onClick={() => setCurrentSlide(idx)}
               aria-label={`Go to slide ${idx + 1}`}
-              className={`h-2.5 rounded-full transition-all duration-300 focus:outline-none ${
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none ${
                 idx === currentSlide
-                  ? "w-10 bg-brand-gold"
-                  : "w-2.5 bg-brand-ivory/40 hover:bg-brand-ivory/70"
+                  ? "w-8 bg-brand-gold"
+                  : "w-2 bg-brand-forest/25 hover:bg-brand-forest/50"
               }`}
             />
           ))}
         </div>
 
         {/* Navigation Arrows */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
           <button
             onClick={prevSlide}
             aria-label="Previous Slide"
-            className="p-2.5 rounded-full bg-brand-charcoal/60 border border-brand-gold/30 text-brand-ivory hover:text-brand-gold hover:bg-brand-charcoal transition-colors focus:outline-none"
+            className="p-2 rounded-full bg-brand-ivory/90 border border-brand-gold/30 text-brand-forest hover:text-brand-gold hover:bg-brand-beige transition-colors focus:outline-none shadow-sm"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
             onClick={nextSlide}
             aria-label="Next Slide"
-            className="p-2.5 rounded-full bg-brand-charcoal/60 border border-brand-gold/30 text-brand-ivory hover:text-brand-gold hover:bg-brand-charcoal transition-colors focus:outline-none"
+            className="p-2 rounded-full bg-brand-ivory/90 border border-brand-gold/30 text-brand-forest hover:text-brand-gold hover:bg-brand-beige transition-colors focus:outline-none shadow-sm"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
             </svg>
           </button>

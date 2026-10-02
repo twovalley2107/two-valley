@@ -175,7 +175,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {/* Product Layout Grid: Left Gallery + Right Details */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           {/* Left Column: Image Gallery */}
-          <div className="lg:col-span-6 sticky top-24">
+          <div className="lg:col-span-6">
             <PDPGallery images={product.images} productName={product.name} />
           </div>
 
