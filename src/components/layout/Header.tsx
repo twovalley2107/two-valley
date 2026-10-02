@@ -63,14 +63,14 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-40 bg-brand-ivory/95 backdrop-blur-md border-b border-brand-gold/25 transition-all duration-300 shadow-sm">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 h-16 sm:h-24 flex items-center justify-between gap-1">
 
           {/* LEFT SECTION: Official Logo + Desktop Navigation Links */}
-          <div className="flex items-center space-x-4 lg:space-x-10 min-w-0">
+          <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-10 min-w-0 shrink-0">
             {/* Official Two Valley Logo (Positioned on the Left) */}
             <Link
               href="/"
-              className="group flex items-center gap-2.5 sm:gap-3 focus:outline-none shrink-0"
+              className="group flex items-center gap-1.5 sm:gap-3 focus:outline-none shrink-0"
               title="Two Valley Homepage"
             >
               <Image
@@ -78,11 +78,11 @@ export function Header() {
                 alt="Two Valley — Pure Natural Finest"
                 width={56}
                 height={56}
-                className="h-11 w-11 sm:h-14 sm:w-14 object-contain rounded-full border border-brand-gold/30 p-0.5 bg-brand-ivory shadow-sm transition-transform duration-300 group-hover:scale-105"
+                className="h-8 w-8 xs:h-10 xs:w-10 sm:h-14 sm:w-14 object-contain rounded-full border border-brand-gold/30 p-0.5 bg-brand-ivory shadow-sm transition-transform duration-300 group-hover:scale-105"
                 priority
               />
               <div className="flex flex-col text-left min-w-0">
-                <span className="font-serif text-lg sm:text-2xl font-bold tracking-[0.06em] text-brand-forest group-hover:text-brand-gold transition-colors duration-300 leading-none truncate">
+                <span className="font-serif text-sm xs:text-base sm:text-2xl font-bold tracking-tight sm:tracking-[0.06em] text-brand-forest group-hover:text-brand-gold transition-colors duration-300 leading-none truncate">
                   TWO VALLEY
                 </span>
                 <span className="hidden sm:block font-sans text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-brand-olive font-bold mt-1">
@@ -127,15 +127,15 @@ export function Header() {
           </div>
 
           {/* RIGHT SECTION: Search, Account, Wishlist, Cart & Mobile Menu Button */}
-          <div className="flex items-center space-x-1 sm:space-x-3 shrink-0">
+          <div className="flex items-center space-x-0.5 xs:space-x-1 sm:space-x-3 shrink-0">
             {/* Search Trigger Button */}
             <button
               onClick={() => setSearchModalOpen(true)}
               aria-label="Search catalog"
-              className="flex items-center space-x-1 text-brand-forest hover:text-brand-gold transition-colors p-1.5 sm:p-2 focus:outline-none focus:ring-1 focus:ring-brand-gold rounded-full"
+              className="flex items-center space-x-1 text-brand-forest hover:text-brand-gold transition-colors p-1 sm:p-2 focus:outline-none focus:ring-1 focus:ring-brand-gold rounded-full"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 xs:w-5 xs:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -154,10 +154,10 @@ export function Header() {
             <Link
               href={isCustomer ? "/account" : isAdmin ? "/admin" : "/login"}
               aria-label={isCustomer ? "Customer Account" : isAdmin ? "Admin Portal" : "Sign In to Account"}
-              className="flex items-center space-x-1 text-brand-forest hover:text-brand-gold transition-colors p-1.5 sm:p-2 focus:outline-none focus:ring-1 focus:ring-brand-gold rounded-full"
+              className="flex items-center space-x-1 text-brand-forest hover:text-brand-gold transition-colors p-1 sm:p-2 focus:outline-none focus:ring-1 focus:ring-brand-gold rounded-full"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 xs:w-5 xs:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -178,10 +178,10 @@ export function Header() {
             <Link
               href="/wishlist"
               aria-label={`Wishlist with ${wishlistCount} items`}
-              className="relative flex items-center space-x-1 text-brand-forest hover:text-brand-gold transition-colors p-1.5 sm:p-2 focus:outline-none focus:ring-1 focus:ring-brand-gold rounded-full"
+              className="relative flex items-center space-x-1 text-brand-forest hover:text-brand-gold transition-colors p-1 sm:p-2 focus:outline-none focus:ring-1 focus:ring-brand-gold rounded-full"
             >
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 xs:w-5 xs:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -194,7 +194,7 @@ export function Header() {
                 />
               </svg>
               {wishlistCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-brand-gold text-brand-charcoal font-sans text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute top-0 right-0 sm:-top-0.5 sm:-right-0.5 bg-brand-gold text-brand-charcoal font-sans text-[9px] sm:text-[10px] font-bold w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center">
                   {wishlistCount}
                 </span>
               )}
@@ -204,10 +204,10 @@ export function Header() {
             <button
               onClick={openCart}
               aria-label={`Shopping Cart with ${cartCount} items`}
-              className="relative bg-brand-forest text-brand-ivory hover:bg-brand-olive transition-colors py-1.5 sm:py-2 px-2.5 sm:px-4 rounded-xl flex items-center space-x-1.5 sm:space-x-2 text-xs font-semibold tracking-wider uppercase shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold cursor-pointer"
+              className="relative bg-brand-forest text-brand-ivory hover:bg-brand-olive transition-colors py-1 sm:py-2 px-1.5 xs:px-2.5 sm:px-4 rounded-lg sm:rounded-xl flex items-center space-x-1 sm:space-x-2 text-[10px] sm:text-xs font-semibold tracking-wider uppercase shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-gold cursor-pointer"
             >
               <svg
-                className="w-4 h-4"
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -220,7 +220,7 @@ export function Header() {
                 />
               </svg>
               <span className="hidden sm:inline">Cart</span>
-              <span className="bg-brand-gold text-brand-charcoal font-sans text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+              <span className="bg-brand-gold text-brand-charcoal font-sans text-[9px] sm:text-[10px] font-bold px-1 sm:px-1.5 py-0.5 rounded-full">
                 {cartCount}
               </span>
             </button>
@@ -232,10 +232,10 @@ export function Header() {
               aria-label="Toggle Navigation Menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation-menu"
-              className="p-1.5 sm:p-2 text-brand-forest hover:text-brand-gold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-gold rounded-lg lg:hidden"
+              className="p-1 sm:p-2 text-brand-forest hover:text-brand-gold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-gold rounded-lg lg:hidden"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

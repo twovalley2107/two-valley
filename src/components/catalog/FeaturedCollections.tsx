@@ -36,36 +36,7 @@ export async function FeaturedCollections() {
           </p>
         </div>
 
-        {/* Category 1: Artisanal Perfumes */}
-        <div className="space-y-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between border-b border-brand-gold/20 pb-4">
-            <div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-brand-forest">
-                Artisanal Perfumes
-              </h3>
-              <p className="font-sans text-sm sm:text-base text-brand-olive mt-1">
-                Pure extrait de parfum capturing high-altitude blossoms and rare woods.
-              </p>
-            </div>
-            <Link
-              href="/perfumes"
-              className="mt-4 sm:mt-0 font-sans text-xs sm:text-sm font-semibold uppercase tracking-widest text-brand-forest hover:text-brand-gold transition-colors flex items-center space-x-1.5"
-            >
-              <span>View All Perfumes</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {featuredPerfumes.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-
-        {/* Category 2: Single-Estate Teas */}
+        {/* Category 1: Single-Estate Teas */}
         <div className="space-y-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between border-b border-brand-gold/20 pb-4">
             <div>
@@ -87,8 +58,37 @@ export async function FeaturedCollections() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-6 lg:gap-8">
             {featuredTeas.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+
+        {/* Category 2: Artisanal Perfumes */}
+        <div className="space-y-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between border-b border-brand-gold/20 pb-4">
+            <div>
+              <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-brand-forest">
+                Artisanal Perfumes
+              </h3>
+              <p className="font-sans text-sm sm:text-base text-brand-olive mt-1">
+                Pure extrait de parfum capturing high-altitude blossoms and rare woods.
+              </p>
+            </div>
+            <Link
+              href="/perfumes"
+              className="mt-4 sm:mt-0 font-sans text-xs sm:text-sm font-semibold uppercase tracking-widest text-brand-forest hover:text-brand-gold transition-colors flex items-center space-x-1.5"
+            >
+              <span>View All Perfumes</span>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-6 lg:gap-8">
+            {featuredPerfumes.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

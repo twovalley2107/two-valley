@@ -56,7 +56,7 @@ export default async function PerfumesPage({ searchParams }: PerfumesPageProps) 
 
         {/* Product Grid / Empty State */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-6 lg:gap-8">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

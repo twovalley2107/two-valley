@@ -97,7 +97,7 @@ export function RecommendationCarousel({
       </div>
 
       {/* Product Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-6">
         {filteredItems.map((recItem) => {
           const productProps = dtoToClientProduct(recItem);
           return <ProductCard key={recItem.id} product={productProps} />;

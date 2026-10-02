@@ -35,8 +35,20 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     maxPrice,
   });
 
-  const products = result.success && result.data ? result.data.products : [];
+  const rawProducts = result.success && result.data ? result.data.products : [];
   const totalCount = result.success && result.data ? result.data.totalCount : 0;
+
+  // By default (or featured sort), display Tea products before Perfumes
+  const products =
+    sort === "featured" || !params.sort
+      ? [...rawProducts].sort((a, b) => {
+          const isATea = a.category?.slug === "single-estate-teas" || Boolean(a.teaType);
+          const isBTea = b.category?.slug === "single-estate-teas" || Boolean(b.teaType);
+          if (isATea && !isBTea) return -1;
+          if (!isATea && isBTea) return 1;
+          return 0;
+        })
+      : rawProducts;
 
   return (
     <div className="min-h-screen bg-brand-ivory py-12 px-4 sm:px-6 lg:px-8 font-sans">
@@ -61,7 +73,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
         {/* Results Grid / Empty State */}
         {products.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-6 lg:gap-8">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

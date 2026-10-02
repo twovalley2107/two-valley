@@ -11,7 +11,15 @@ interface WishlistGridProps {
 }
 
 export function WishlistGrid({ initialProducts }: WishlistGridProps) {
-  const [products, setProducts] = useState<ClientProduct[]>(initialProducts);
+  const [products, setProducts] = useState<ClientProduct[]>(() => {
+    return [...initialProducts].sort((a, b) => {
+      const isATea = a.category?.slug === "single-estate-teas" || Boolean(a.teaType);
+      const isBTea = b.category?.slug === "single-estate-teas" || Boolean(b.teaType);
+      if (isATea && !isBTea) return -1;
+      if (!isATea && isBTea) return 1;
+      return 0;
+    });
+  });
   const [removingId, setRemovingId] = useState<string | null>(null);
 
   const handleRemove = async (productId: string) => {
@@ -46,16 +54,16 @@ export function WishlistGrid({ initialProducts }: WishlistGridProps) {
         </div>
         <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
           <Link
-            href="/perfumes"
+            href="/teas"
             className="py-3 px-6 rounded-xl bg-brand-forest text-brand-ivory text-xs font-semibold uppercase tracking-widest hover:bg-brand-olive transition-colors"
           >
-            Explore Perfumes
+            Discover Teas
           </Link>
           <Link
-            href="/teas"
+            href="/perfumes"
             className="py-3 px-6 rounded-xl border border-brand-forest text-brand-forest text-xs font-semibold uppercase tracking-widest hover:bg-brand-beige transition-colors"
           >
-            Discover Teas
+            Explore Perfumes
           </Link>
         </div>
       </div>
@@ -68,7 +76,7 @@ export function WishlistGrid({ initialProducts }: WishlistGridProps) {
         Showing <span className="font-semibold text-brand-forest">{products.length}</span> saved {products.length === 1 ? "formulation" : "formulations"}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      <div className="grid grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-6 lg:gap-8">
         {products.map((product) => (
           <div key={product.id} className="relative group">
             <ProductCard product={product} />
@@ -78,9 +86,9 @@ export function WishlistGrid({ initialProducts }: WishlistGridProps) {
               onClick={() => handleRemove(product.id)}
               disabled={removingId === product.id}
               aria-label={`Remove ${product.name} from wishlist`}
-              className="absolute top-3 right-3 z-10 p-2 rounded-full bg-brand-ivory/90 text-brand-olive hover:text-red-700 hover:bg-red-50 border border-brand-gold/20 shadow-sm transition-all focus:outline-none"
+              className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 p-1 sm:p-2 rounded-full bg-brand-ivory/90 text-brand-olive hover:text-red-700 hover:bg-red-50 border border-brand-gold/20 shadow-sm transition-all focus:outline-none"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
